@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace LeagueTableApp.BLL.Services;
 
-internal class MatchService : IMatchService
+public class MatchService : IMatchService
 {
     private readonly AppDbContext _context;
     private readonly IMapper _mapper;
@@ -26,7 +26,17 @@ internal class MatchService : IMatchService
     public void DeleteMatch(int matchId)
     {
         _context.Matches.Remove(new DAL.Entities.Match(null!) { Id = matchId });
-        _context.SaveChanges();
+        try
+        {
+            _context.SaveChanges();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!_context.Matches.Any(p => p.Id == matchId))
+                throw new EntityNotFoundException("Nem található a meccs!");
+            else
+                throw;
+        }
     }
 
     public Match GetMatch(int matchId)
@@ -54,6 +64,16 @@ internal class MatchService : IMatchService
         var matchFromEf = _mapper.Map<DAL.Entities.Match>(updatedMatch);
         matchFromEf.Id = matchId;
         _context.Attach(matchFromEf).State = EntityState.Modified;
-        _context.SaveChanges();
+        try
+        {
+            _context.SaveChanges();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!_context.Matches.Any(p => p.Id == matchId))
+                throw new EntityNotFoundException("Nem található a meccs!");
+            else
+                throw;
+        }
     }
 }

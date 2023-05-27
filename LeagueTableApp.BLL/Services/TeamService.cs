@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace LeagueTableApp.BLL.Services;
 
-internal class TeamService : ITeamService
+public class TeamService : ITeamService
 {
     private readonly AppDbContext _context;
     private readonly IMapper _mapper;
@@ -25,8 +25,18 @@ internal class TeamService : ITeamService
 
     public void DeleteTeam(int teamId)
     {
-        _context.Teams.Remove(new DAL.Entities.Team(null!) { Id = teamId });
-        _context.SaveChanges();
+        _context.Teams.Remove(new DAL.Entities.Team(null!, null!, null!, null!) { Id = teamId });
+        try
+        {
+            _context.SaveChanges();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!_context.Teams.Any(p => p.Id == teamId))
+                throw new EntityNotFoundException("Nem található a csapat!");
+            else
+                throw;
+        }
     }
 
     public Team GetTeam(int teamId)
@@ -55,5 +65,16 @@ internal class TeamService : ITeamService
         teamFromEf.Id = teamId;
         _context.Attach(teamFromEf).State = EntityState.Modified;
         _context.SaveChanges();
+        try
+        {
+            _context.SaveChanges();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!_context.Teams.Any(p => p.Id == teamId))
+                throw new EntityNotFoundException("Nem található a csapat!");
+            else
+                throw;
+        }
     }
 }

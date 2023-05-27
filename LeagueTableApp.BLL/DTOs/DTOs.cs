@@ -10,25 +10,29 @@ namespace LeagueTableApp.BLL.DTOs
     {
         public int Id { get; init; }
         public string Name { get; init; } = null!;
-        public List<string> Players { get; init; } = null!;
-        public List<League> Leagues { get; init; } = null!; 
-        public List<Team> Teams { get; init; } = null!;
+        public string Coach { get; init; } = null!;
+        public string Captain { get; init; } = null!;
+        public string Players { get; init; } = null!;
     }
     public record Match
     {
         public int Id { get; init; }
         public string Location { get; init; } = null!;
-        public int HomeTeamId { get; init; }
-        public int ForeignTeamId { get; init; }
+        public int? MatchsLeagueId { get; init; }
+        public League? MatchsLeague { get; init; }
+        public int? HomeTeamId { get; init; }
+        public Team? HomeTeam { get; init; }
+        public int? ForeignTeamId { get; init; }
+        public Team? ForeignTeam { get; init; }
         public double HomeTeamScore { get; init; }
         public double ForeignTeamScore { get; init; }
-        public bool IsEnded { get; init; }
+        public bool IsEnded { get; init; } = false;
     }
     public record League
     {
         public int Id { get; init; }
         public string Name { get; init; } = null!;
-        public List<Team> Teams { get; init; } = null!;
-        public List<Match> Matches { get; init; } = null!;
+        public List<Team> Team { get; init; } = new List<Team>();
+        //public List<Match>? Match { get; init; } 
     }
 }

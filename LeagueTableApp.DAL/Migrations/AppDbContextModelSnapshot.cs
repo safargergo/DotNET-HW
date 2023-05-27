@@ -36,7 +36,7 @@ namespace LeagueTableApp.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Leagues");
                 });
 
             modelBuilder.Entity("LeagueTableApp.DAL.Entities.Match", b =>
@@ -47,13 +47,13 @@ namespace LeagueTableApp.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("ForeignTeamId")
+                    b.Property<int?>("ForeignTeamId")
                         .HasColumnType("int");
 
                     b.Property<double>("ForeignTeamScore")
                         .HasColumnType("float");
 
-                    b.Property<int>("HomeTeamId")
+                    b.Property<int?>("HomeTeamId")
                         .HasColumnType("int");
 
                     b.Property<double>("HomeTeamScore")
@@ -62,23 +62,22 @@ namespace LeagueTableApp.DAL.Migrations
                     b.Property<bool>("IsEnded")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("LeagueId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TeamId")
+                    b.Property<int?>("MatchsLeagueId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LeagueId");
+                    b.HasIndex("ForeignTeamId");
 
-                    b.HasIndex("TeamId");
+                    b.HasIndex("HomeTeamId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.HasIndex("MatchsLeagueId");
+
+                    b.ToTable("Matches");
                 });
 
             modelBuilder.Entity("LeagueTableApp.DAL.Entities.Team", b =>
@@ -89,64 +88,63 @@ namespace LeagueTableApp.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Captain")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Coach")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("LeagueId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Players")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders", (string)null);
-                });
+                    b.HasIndex("LeagueId");
 
-            modelBuilder.Entity("LeagueTeam", b =>
-                {
-                    b.Property<int>("LeaguesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TeamsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("LeaguesId", "TeamsId");
-
-                    b.HasIndex("TeamsId");
-
-                    b.ToTable("LeagueTeam", (string)null);
+                    b.ToTable("Teams");
                 });
 
             modelBuilder.Entity("LeagueTableApp.DAL.Entities.Match", b =>
                 {
-                    b.HasOne("LeagueTableApp.DAL.Entities.League", null)
-                        .WithMany("Matches")
-                        .HasForeignKey("LeagueId");
-
-                    b.HasOne("LeagueTableApp.DAL.Entities.Team", null)
-                        .WithMany("Matches")
-                        .HasForeignKey("TeamId");
-                });
-
-            modelBuilder.Entity("LeagueTeam", b =>
-                {
-                    b.HasOne("LeagueTableApp.DAL.Entities.League", null)
+                    b.HasOne("LeagueTableApp.DAL.Entities.Team", "ForeignTeam")
                         .WithMany()
-                        .HasForeignKey("LeaguesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ForeignTeamId");
 
-                    b.HasOne("LeagueTableApp.DAL.Entities.Team", null)
+                    b.HasOne("LeagueTableApp.DAL.Entities.Team", "HomeTeam")
                         .WithMany()
-                        .HasForeignKey("TeamsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+                        .HasForeignKey("HomeTeamId");
 
-            modelBuilder.Entity("LeagueTableApp.DAL.Entities.League", b =>
-                {
-                    b.Navigation("Matches");
+                    b.HasOne("LeagueTableApp.DAL.Entities.League", "MatchsLeague")
+                        .WithMany()
+                        .HasForeignKey("MatchsLeagueId");
+
+                    b.Navigation("ForeignTeam");
+
+                    b.Navigation("HomeTeam");
+
+                    b.Navigation("MatchsLeague");
                 });
 
             modelBuilder.Entity("LeagueTableApp.DAL.Entities.Team", b =>
                 {
-                    b.Navigation("Matches");
+                    b.HasOne("LeagueTableApp.DAL.Entities.League", null)
+                        .WithMany("Teams")
+                        .HasForeignKey("LeagueId");
+                });
+
+            modelBuilder.Entity("LeagueTableApp.DAL.Entities.League", b =>
+                {
+                    b.Navigation("Teams");
                 });
 #pragma warning restore 612, 618
         }
