@@ -18,17 +18,17 @@ namespace LeagueTableApp.BLL.DTOs
     }
     public record Match
     {
-        public int Id { get; init; }
-        public string Location { get; init; } = null!;
-        public int LeagueId { get; init; }
-        public League? League { get; init; }
-        public int? HomeTeamId { get; init; }
-        public Team? HomeTeam { get; init; }
-        public int? ForeignTeamId { get; init; }
-        public Team? ForeignTeam { get; init; }
-        public double HomeTeamScore { get; init; }
-        public double ForeignTeamScore { get; init; }
-        public bool IsEnded { get; init; }
+        public int Id { get; set; }
+        //public string Location { get; set; } = null!;
+        public int LeagueId { get; set; }
+        public League? League { get; set; }
+        public int? HomeTeamId { get; set; }
+        public Team? HomeTeam { get; set; }
+        public int? ForeignTeamId { get; set; }
+        public Team? ForeignTeam { get; set; }
+        public double HomeTeamScore { get; set; }
+        public double ForeignTeamScore { get; set; }
+        public bool IsEnded { get; set; }
     }
     public record League
     {

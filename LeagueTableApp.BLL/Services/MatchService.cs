@@ -25,7 +25,7 @@ public class MatchService : IMatchService
 
     public void DeleteMatch(int matchId)
     {
-        _context.Matches.Remove(new DAL.Entities.Match(null!) { Id = matchId });
+        _context.Matches.Remove(new DAL.Entities.Match() { Id = matchId });
         try
         {
             _context.SaveChanges();
@@ -85,4 +85,54 @@ public class MatchService : IMatchService
         return matches;
     }
 
+    public IEnumerable<Match> GenerateMatchesOfLeague(int leagueId)
+    {
+        var matches = GetMatchesOfLeague(leagueId);
+        if (matches.Count() > 0)
+        {
+            return matches;
+        }
+        else
+        {
+            var allTeams = _context.Teams
+            .Where(t => t.LeagueId == leagueId)
+            .ProjectTo<Team>(_mapper.ConfigurationProvider).AsEnumerable().ToList();
+            //IEnumerable<Match> newMatches = new List<Match>();
+            var teamCount = allTeams.Count();//_context.Teams.Where(t => t.LeagueId == leagueId).Count();
+            if (teamCount < 2)
+            {
+                throw new MatchCreationException("Nem lehet 2-nél kevesebb csapattal meccseket generálni!");
+            }
+            var homeTeams = new List<Team>();
+            foreach (var team in allTeams)
+            {
+                homeTeams.Add(team);
+            }
+            foreach (var homeTeam in homeTeams)
+            {
+                var otherTeams = new List<Team>();
+                foreach (var team in allTeams)
+                {
+                    otherTeams.Add(team);
+                }
+                otherTeams.Remove(homeTeam);
+                foreach (var otherTeam in otherTeams)
+                {
+                    Match newMatch = new();
+                    newMatch.LeagueId = leagueId;
+                    newMatch.HomeTeamId = homeTeam.Id;
+                    newMatch.ForeignTeamId = otherTeam.Id;
+                    //newMatch.HomeTeam = homeTeam;
+                    //newMatch.ForeignTeam = otherTeam;
+                    newMatch.HomeTeamScore = 0;
+                    newMatch.ForeignTeamScore = 0;
+                    newMatch.IsEnded = false;
+                    //newMatches.Append(newMatch);
+                    InsertMatch(newMatch);
+                }
+            }
+            return GetMatchesOfLeague(leagueId);
+        }
+        
+    }
 }

@@ -9,12 +9,12 @@ namespace LeagueTableApp.DAL.Entities
     public class Match
     {
         public int Id { get; set; }
-        public string Location { get; set; }
+        /*public string Location { get; set; }
 
         public Match(string location)
         {
             Location = location;
-        }
+        }*/
 
         public int LeagueId { get; set; }
         public League? League { get; set; }

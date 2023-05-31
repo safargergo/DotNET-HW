@@ -9,4 +9,5 @@ public interface IMatchService
     public void UpdateMatch(int matchId, Match updatedMatch);
     public void DeleteMatch(int matchId);
     public IEnumerable<Match> GetMatchesOfLeague(int leagueId);
+    public IEnumerable<Match> GenerateMatchesOfLeague(int leagueId);
 }

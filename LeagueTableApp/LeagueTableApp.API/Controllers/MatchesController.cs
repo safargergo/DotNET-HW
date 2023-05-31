@@ -75,5 +75,11 @@ namespace LeagueTableApp.API.Controllers
         {
             return _matchService.GetMatchesOfLeague(id).ToList();
         }
+
+        [HttpGet("GenerateMatchesOfLeague/{id}", Name = "GenerateMatchesOfLeague")]
+        public ActionResult<IEnumerable<Match>> GenerateMatchesOfLeague(int id)
+        {
+            return _matchService.GenerateMatchesOfLeague(id).ToList();
+        }
     }
 }
