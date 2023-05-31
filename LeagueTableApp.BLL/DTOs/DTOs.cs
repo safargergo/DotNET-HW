@@ -38,4 +38,11 @@ namespace LeagueTableApp.BLL.DTOs
         //public ICollection<Team> Teams { get; } = new List<Team>();
         //public ICollection<Match> Matches { get; } = new List<Match>();
     }
+    public record PointsTable
+    {
+        //public List<string>? Teams { get; init; }
+        //public List<int>? Points { get; init; }
+        //public Dictionary<string, int> teamPointPairs { get; init; } = null!;
+        public List<KeyValuePair<string, int>> teamPointPairs { get; set; } = null!;
+    }
 }

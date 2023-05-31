@@ -6,6 +6,7 @@ using LeagueTableApp.BLL.Interfaces;
 using LeagueTableApp.DAL;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -76,5 +77,57 @@ public class LeagueService : ILeagueService
                 throw;
         }
 
+    }
+
+    public PointsTable GetActualLeagueTable(int leagueId)
+    {
+        var allMatches = _context.Matches
+            .Where(m => m.LeagueId == leagueId && m.IsEnded == true)
+            .ProjectTo<Match>(_mapper.ConfigurationProvider).AsEnumerable().ToList();
+        var allTeams = _context.Teams
+            .Where(t => t.LeagueId == leagueId)
+            .ProjectTo<Team>(_mapper.ConfigurationProvider).AsEnumerable().ToList();
+        Dictionary<string, int> teamPointPairs = new Dictionary<string, int>();
+        foreach (var team in allTeams)
+        {
+            teamPointPairs.Add(team.Name, 0);
+        }
+        foreach (var match in allMatches)
+        {
+            if (match.HomeTeamScore == match.ForeignTeamScore)
+            {
+                var ht = _context.Teams
+                    .Where(t => t.LeagueId == leagueId)
+                    .SingleOrDefault(t => t.Id == match.HomeTeamId) ?? throw new EntityNotFoundException("Nem található ilyen csapat!");
+                var ft = _context.Teams
+                    .Where(t => t.LeagueId == leagueId)
+                    .SingleOrDefault(t => t.Id == match.ForeignTeamId) ?? throw new EntityNotFoundException("Nem található ilyen csapat!");
+                /*var homePoint = teamPointPairs[ht.Name];
+                var foreignPoint = teamPointPairs[ft.Name];
+                teamPointPairs[ht.Name] = homePoint + 1;
+                teamPointPairs[ft.Name] = foreignPoint + 1;*/
+                teamPointPairs[ht.Name] += 1;
+                teamPointPairs[ft.Name] += 1;
+            }
+            else if (match.HomeTeamScore > match.ForeignTeamScore)
+            {
+                var ht = _context.Teams
+                    .Where(t => t.LeagueId == leagueId)
+                    .SingleOrDefault(t => t.Id == match.HomeTeamId) ?? throw new EntityNotFoundException("Nem található ilyen csapat!");
+                teamPointPairs[ht.Name] += 3;
+            }
+            else
+            {
+                var ft = _context.Teams
+                    .Where(t => t.LeagueId == leagueId)
+                    .SingleOrDefault(t => t.Id == match.ForeignTeamId) ?? throw new EntityNotFoundException("Nem található ilyen csapat!");
+                teamPointPairs[ft.Name] += 3;
+            }
+        }
+        var rendezett = teamPointPairs.OrderByDescending(x => x.Value)
+                                   .ToDictionary(x => x.Key, x => x.Value);
+        PointsTable pt = new();
+        pt.teamPointPairs = rendezett.ToList(); 
+        return pt;
     }
 }

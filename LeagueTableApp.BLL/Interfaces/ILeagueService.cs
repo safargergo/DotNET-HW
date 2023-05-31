@@ -8,4 +8,5 @@ public interface ILeagueService
     public League InsertLeague(League newLeague);
     public void UpdateLeague(int leagueId, League updatedLeague);
     public void DeleteLeague(int leagueId);
+    public PointsTable GetActualLeagueTable(int leagueId);
 }

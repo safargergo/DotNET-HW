@@ -69,5 +69,11 @@ namespace LeagueTableApp.API.Controllers
             _leagueService.DeleteLeague(id);
             return NoContent();
         }
+
+        [HttpGet("GetActualLeagueTable/{id}", Name = "GetActualLeagueTable")]
+        public ActionResult<PointsTable> GetActualLeagueTable(int id)
+        {
+            return _leagueService.GetActualLeagueTable(id);
+        }
     }
 }
