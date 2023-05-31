@@ -69,5 +69,11 @@ namespace LeagueTableApp.API.Controllers
             _matchService.DeleteMatch(id);
             return NoContent();
         }
+
+        [HttpGet("MatchesOfLeague/{id}", Name = "GetMatchesOfLeague")]
+        public ActionResult<IEnumerable<Match>> GetMatchesOfLeague(int id)
+        {
+            return _matchService.GetMatchesOfLeague(id).ToList();
+        }
     }
 }

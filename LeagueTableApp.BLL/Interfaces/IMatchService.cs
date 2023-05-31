@@ -8,4 +8,5 @@ public interface IMatchService
     public Match InsertMatch(Match newMatch);
     public void UpdateMatch(int matchId, Match updatedMatch);
     public void DeleteMatch(int matchId);
+    public IEnumerable<Match> GetMatchesOfLeague(int leagueId);
 }

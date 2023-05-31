@@ -76,4 +76,13 @@ public class MatchService : IMatchService
                 throw;
         }
     }
+
+    public IEnumerable<Match> GetMatchesOfLeague(int leagueId)
+    {
+        var matches = _context.Matches
+            .Where(m => leagueId == m.LeagueId)
+            .ProjectTo<Match>(_mapper.ConfigurationProvider).AsEnumerable();
+        return matches;
+    }
+
 }
