@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LeagueTableApp.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230525161404_Init")]
+    [Migration("20230531095641_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,6 +31,9 @@ namespace LeagueTableApp.DAL.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -68,7 +71,7 @@ namespace LeagueTableApp.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MatchsLeagueId")
+                    b.Property<int>("MatchsLeagueId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -91,14 +94,12 @@ namespace LeagueTableApp.DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Captain")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Coach")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("LeagueId")
+                    b.Property<int>("LeagueId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -127,8 +128,10 @@ namespace LeagueTableApp.DAL.Migrations
                         .HasForeignKey("HomeTeamId");
 
                     b.HasOne("LeagueTableApp.DAL.Entities.League", "MatchsLeague")
-                        .WithMany()
-                        .HasForeignKey("MatchsLeagueId");
+                        .WithMany("Matches")
+                        .HasForeignKey("MatchsLeagueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ForeignTeam");
 
@@ -141,11 +144,15 @@ namespace LeagueTableApp.DAL.Migrations
                 {
                     b.HasOne("LeagueTableApp.DAL.Entities.League", null)
                         .WithMany("Teams")
-                        .HasForeignKey("LeagueId");
+                        .HasForeignKey("LeagueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("LeagueTableApp.DAL.Entities.League", b =>
                 {
+                    b.Navigation("Matches");
+
                     b.Navigation("Teams");
                 });
 #pragma warning restore 612, 618

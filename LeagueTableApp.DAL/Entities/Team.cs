@@ -10,9 +10,10 @@ namespace LeagueTableApp.DAL.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Coach { get; set; }
-        public string Captain { get; set; }
+        public string? Coach { get; set; }
+        public string? Captain { get; set; }
         public string Players { get; set; }
+        public int LeagueId { get; set; }
 
         public Team(string name, string players, string coach = "-NA-", string captain = "-NA-")
         {

@@ -14,7 +14,8 @@ namespace LeagueTableApp.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -28,10 +29,10 @@ namespace LeagueTableApp.DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Coach = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Captain = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Coach = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Captain = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Players = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LeagueId = table.Column<int>(type: "int", nullable: true)
+                    LeagueId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -40,7 +41,8 @@ namespace LeagueTableApp.DAL.Migrations
                         name: "FK_Teams_Leagues_LeagueId",
                         column: x => x.LeagueId,
                         principalTable: "Leagues",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -50,7 +52,7 @@ namespace LeagueTableApp.DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MatchsLeagueId = table.Column<int>(type: "int", nullable: true),
+                    MatchsLeagueId = table.Column<int>(type: "int", nullable: false),
                     HomeTeamId = table.Column<int>(type: "int", nullable: true),
                     ForeignTeamId = table.Column<int>(type: "int", nullable: true),
                     HomeTeamScore = table.Column<double>(type: "float", nullable: false),
@@ -64,7 +66,8 @@ namespace LeagueTableApp.DAL.Migrations
                         name: "FK_Matches_Leagues_MatchsLeagueId",
                         column: x => x.MatchsLeagueId,
                         principalTable: "Leagues",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Matches_Teams_ForeignTeamId",
                         column: x => x.ForeignTeamId,
