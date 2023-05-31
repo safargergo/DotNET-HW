@@ -8,4 +8,5 @@ public interface ITeamService
     public Team InsertTeam(Team newTeam);
     public void UpdateTeam(int teamId, Team updatedTeam);
     public void DeleteTeam(int teamId);
+    public IEnumerable<Match> ListPlayedMatchesOfTeam(int teamId);
 }

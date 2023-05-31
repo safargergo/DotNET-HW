@@ -4,6 +4,7 @@ using LeagueTableApp.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LeagueTableApp.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230531123234_teambenLeagueHozzaadva")]
+    partial class teambenLeagueHozzaadva
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,12 +67,12 @@ namespace LeagueTableApp.DAL.Migrations
                     b.Property<bool>("IsEnded")
                         .HasColumnType("bit");
 
-                    b.Property<int>("LeagueId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MatchsLeagueId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -78,7 +80,7 @@ namespace LeagueTableApp.DAL.Migrations
 
                     b.HasIndex("HomeTeamId");
 
-                    b.HasIndex("LeagueId");
+                    b.HasIndex("MatchsLeagueId");
 
                     b.ToTable("Matches");
                 });
@@ -125,9 +127,9 @@ namespace LeagueTableApp.DAL.Migrations
                         .WithMany()
                         .HasForeignKey("HomeTeamId");
 
-                    b.HasOne("LeagueTableApp.DAL.Entities.League", "League")
+                    b.HasOne("LeagueTableApp.DAL.Entities.League", "MatchsLeague")
                         .WithMany("Matches")
-                        .HasForeignKey("LeagueId")
+                        .HasForeignKey("MatchsLeagueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -135,7 +137,7 @@ namespace LeagueTableApp.DAL.Migrations
 
                     b.Navigation("HomeTeam");
 
-                    b.Navigation("League");
+                    b.Navigation("MatchsLeague");
                 });
 
             modelBuilder.Entity("LeagueTableApp.DAL.Entities.Team", b =>

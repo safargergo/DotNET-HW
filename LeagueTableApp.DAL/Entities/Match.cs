@@ -16,12 +16,12 @@ namespace LeagueTableApp.DAL.Entities
             Location = location;
         }
 
-        public int MatchsLeagueId { get; set; }
-        public League MatchsLeague { get; set; } = null!;
+        public int LeagueId { get; set; }
+        public League? League { get; set; }
         public int? HomeTeamId { get; set; }
-        public Team HomeTeam { get; set; } = null!;
+        public Team? HomeTeam { get; set; }
         public int? ForeignTeamId { get; set; }
-        public Team ForeignTeam { get; set; } = null!;
+        public Team? ForeignTeam { get; set; }
         public double HomeTeamScore { get; set; } = 0;
         public double ForeignTeamScore { get; set; } = 0;
         public bool IsEnded { get; set; } = false;

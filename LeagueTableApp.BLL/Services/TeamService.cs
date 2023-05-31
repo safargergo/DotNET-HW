@@ -77,4 +77,28 @@ public class TeamService : ITeamService
                 throw;
         }
     }
+
+    public IEnumerable<Match> ListPlayedMatchesOfTeam(int teamId)
+    {
+        /*var matches = _context.Teams
+            .Where(t => t.Id == teamId)
+            .Include(t => t.League)
+                .ThenInclude(l => l.Matches)
+            .Select(t => t.League.Matches);
+        var teamsMatches = matches
+            .ProjectTo<Match>(_mapper.ConfigurationProvider).AsEnumerable()
+            .Where(m => m.IsEnded==true && (teamId == m.HomeTeamId || teamId == m.ForeignTeamId));*/
+        var teamsMatches = _context.Matches
+            .Where(m => m.IsEnded == true && (teamId == m.HomeTeamId || teamId == m.ForeignTeamId))
+            .ProjectTo<Match>(_mapper.ConfigurationProvider).AsEnumerable();
+        return teamsMatches;
+        /*if (teamsMatches != null && teamsMatches.Any())
+        {
+            return teamsMatches;
+        }
+        else
+        {
+            return Enumerable.Empty<Match>();
+        }*/
+    }
 }

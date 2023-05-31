@@ -14,6 +14,7 @@ namespace LeagueTableApp.DAL.Entities
         public string? Captain { get; set; }
         public string Players { get; set; }
         public int LeagueId { get; set; }
+        public League League { get; set; } = null!;
 
         public Team(string name, string players, string coach = "-NA-", string captain = "-NA-")
         {
