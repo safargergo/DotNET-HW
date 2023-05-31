@@ -101,4 +101,12 @@ public class TeamService : ITeamService
             return Enumerable.Empty<Match>();
         }*/
     }
+
+    public IEnumerable<Team> GetTeamsOfLeague(int leagueId)
+    {
+        var teams = _context.Teams
+            .Where(t => leagueId == t.LeagueId)
+            .ProjectTo<Team>(_mapper.ConfigurationProvider).AsEnumerable();
+        return teams;
+    }
 }

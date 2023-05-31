@@ -75,5 +75,12 @@ namespace LeagueTableApp.API.Controllers
         {
             return _teamService.ListPlayedMatchesOfTeam(id).ToList();
         }
+
+        // GET api/<TeamsController>/5
+        [HttpGet("TeamsOfLeague/{id}", Name = "GetTeamsOfLeague")]
+        public ActionResult<IEnumerable<Team>> GetTeamsOfLeague(int id)
+        {
+            return _teamService.GetTeamsOfLeague(id).ToList();
+        }
     }
 }

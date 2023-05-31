@@ -9,4 +9,5 @@ public interface ITeamService
     public void UpdateTeam(int teamId, Team updatedTeam);
     public void DeleteTeam(int teamId);
     public IEnumerable<Match> ListPlayedMatchesOfTeam(int teamId);
+    public IEnumerable<Team> GetTeamsOfLeague(int leagueId);
 }
