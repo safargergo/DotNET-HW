@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,9 @@ namespace LeagueTableApp.BLL.DTOs
         public double HomeTeamScore { get; set; }
         public double ForeignTeamScore { get; set; }
         public bool IsEnded { get; set; }
+
+        [Required(ErrorMessage = "RowVersion is required")]
+        public byte[] RowVersion { get; init; } = null!;
     }
     public record League
     {

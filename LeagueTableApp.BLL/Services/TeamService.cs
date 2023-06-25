@@ -25,7 +25,15 @@ public class TeamService : ITeamService
 
     public void DeleteTeam(int teamId)
     {
-        _context.Teams.Remove(new DAL.Entities.Team(null!, null!, null!, null!) { Id = teamId });
+        var theTeam = _context.Teams
+            .ProjectTo<Team>(_mapper.ConfigurationProvider)
+            .SingleOrDefault(t => t.Id == teamId);
+        if (theTeam == null) return;
+
+        var teamFromEf = _mapper.Map<DAL.Entities.Team>(theTeam);
+        teamFromEf.IsDeleted = true;
+        _context.Attach(teamFromEf).State = EntityState.Modified;
+        //_context.Teams.Remove(new DAL.Entities.Team(null!, null!, null!, null!) { Id = teamId });
         try
         {
             _context.SaveChanges();
@@ -64,7 +72,6 @@ public class TeamService : ITeamService
         var teamFromEf = _mapper.Map<DAL.Entities.Team>(updatedTeam);
         teamFromEf.Id = teamId;
         _context.Attach(teamFromEf).State = EntityState.Modified;
-        _context.SaveChanges();
         try
         {
             _context.SaveChanges();

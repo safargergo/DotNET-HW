@@ -4,7 +4,7 @@
 
 namespace LeagueTableApp.DAL.Migrations
 {
-    public partial class matchbenLegueAtirvanNullozhatora : Migration
+    public partial class SoftdeleteModification2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -1,3 +1,5 @@
+using Hellang.Middleware.ProblemDetails;
+using LeagueTableApp.API.ConcurrencyProblemDetails;
 using LeagueTableApp.BLL.DTOs;
 using LeagueTableApp.BLL.Interfaces;
 using LeagueTableApp.BLL.Services;
@@ -12,6 +14,13 @@ builder.Services.AddAutoMapper(typeof(WebApiProfile));
 builder.Services.AddTransient<ILeagueService, LeagueService>();
 builder.Services.AddTransient<IMatchService, MatchService>();
 builder.Services.AddTransient<ITeamService, TeamService>();
+
+
+builder.Services.AddProblemDetails(options =>
+{ 
+    options.Map<DbUpdateConcurrencyException>(
+    ex => new ConcurrencyProblemDetails(ex));
+});
 
 
 builder.Services.AddControllers();
@@ -35,3 +44,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }

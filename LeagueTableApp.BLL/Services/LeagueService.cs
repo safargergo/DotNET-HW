@@ -9,6 +9,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,7 +27,15 @@ public class LeagueService : ILeagueService
 
     public void DeleteLeague(int leagueId)
     {
-        _context.Leagues.Remove(new DAL.Entities.League(null!) { Id = leagueId });
+        var theLeague = _context.Leagues
+            .ProjectTo<League>(_mapper.ConfigurationProvider)
+            .SingleOrDefault(t => t.Id == leagueId);
+        if (theLeague == null) return;
+
+        var leagueFromEf = _mapper.Map<DAL.Entities.League>(theLeague);
+        leagueFromEf.IsDeleted = true;
+        _context.Attach(leagueFromEf).State = EntityState.Modified;
+        //_context.Leagues.Remove(new DAL.Entities.League(null!) { Id = leagueId });
         try
         {
             _context.SaveChanges();

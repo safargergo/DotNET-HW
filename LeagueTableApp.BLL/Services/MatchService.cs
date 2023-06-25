@@ -25,7 +25,16 @@ public class MatchService : IMatchService
 
     public void DeleteMatch(int matchId)
     {
-        _context.Matches.Remove(new DAL.Entities.Match() { Id = matchId });
+        var theMatch = _context.Matches
+            //.ProjectTo<Match>(_mapper.ConfigurationProvider)
+            .SingleOrDefault(t => t.Id == matchId);
+        if (theMatch == null) return;
+
+        //var matchFromEf = _mapper.Map<DAL.Entities.Match>(theMatch);
+        //matchFromEf.IsDeleted = true;
+        theMatch.IsDeleted = true;
+        _context.Attach(theMatch).State = EntityState.Modified;
+        //_context.Matches.Remove(new DAL.Entities.Match() { Id = matchId });
         try
         {
             _context.SaveChanges();

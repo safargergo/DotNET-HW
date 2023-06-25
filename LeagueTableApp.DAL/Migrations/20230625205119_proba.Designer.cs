@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LeagueTableApp.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230531123234_teambenLeagueHozzaadva")]
-    partial class teambenLeagueHozzaadva
+    [Migration("20230625205119_proba")]
+    partial class proba
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,13 +35,34 @@ namespace LeagueTableApp.DAL.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
+                    b.HasAlternateKey("Name");
+
                     b.ToTable("Leagues");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 101,
+                            Description = "It's a league for testing, for example test changeing values or deleting.",
+                            IsDeleted = false,
+                            Name = "TestLeague1"
+                        },
+                        new
+                        {
+                            Id = 102,
+                            Description = "It's a league for testing, for example test changeing values or deleting.",
+                            IsDeleted = false,
+                            Name = "TestLeague2"
+                        });
                 });
 
             modelBuilder.Entity("LeagueTableApp.DAL.Entities.Match", b =>
@@ -64,15 +85,20 @@ namespace LeagueTableApp.DAL.Migrations
                     b.Property<double>("HomeTeamScore")
                         .HasColumnType("float");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsEnded")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("MatchsLeagueId")
+                    b.Property<int>("LeagueId")
                         .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.HasKey("Id");
 
@@ -80,7 +106,9 @@ namespace LeagueTableApp.DAL.Migrations
 
                     b.HasIndex("HomeTeamId");
 
-                    b.HasIndex("MatchsLeagueId");
+                    b.HasIndex("IsEnded");
+
+                    b.HasIndex("LeagueId");
 
                     b.ToTable("Matches");
                 });
@@ -99,12 +127,15 @@ namespace LeagueTableApp.DAL.Migrations
                     b.Property<string>("Coach")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("LeagueId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Players")
                         .IsRequired()
@@ -112,9 +143,61 @@ namespace LeagueTableApp.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LeagueId");
+                    b.HasAlternateKey("LeagueId", "Name");
 
                     b.ToTable("Teams");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 101,
+                            Captain = "Player2",
+                            Coach = "Test",
+                            IsDeleted = false,
+                            LeagueId = 101,
+                            Name = "TestTeam1",
+                            Players = "Player1, Player2, Player3"
+                        },
+                        new
+                        {
+                            Id = 102,
+                            Captain = "A",
+                            Coach = "Guardiola",
+                            IsDeleted = false,
+                            LeagueId = 101,
+                            Name = "TestTeam2",
+                            Players = "A, B, C, D"
+                        },
+                        new
+                        {
+                            Id = 103,
+                            Captain = "Y",
+                            Coach = "Rosssi",
+                            IsDeleted = false,
+                            LeagueId = 101,
+                            Name = "TestTeam3",
+                            Players = "X, Y, Z"
+                        },
+                        new
+                        {
+                            Id = 104,
+                            Captain = "jatekos3",
+                            Coach = "BelaBacsi",
+                            IsDeleted = false,
+                            LeagueId = 102,
+                            Name = "TestTeamForDelete",
+                            Players = "jatekos1, jatekos2, jatekos3"
+                        },
+                        new
+                        {
+                            Id = 105,
+                            Captain = "Aladár",
+                            Coach = "Csercsaszov",
+                            IsDeleted = false,
+                            LeagueId = 102,
+                            Name = "TestTeamForUpdate",
+                            Players = "Aladár, Béla, Csanád, Dániel"
+                        });
                 });
 
             modelBuilder.Entity("LeagueTableApp.DAL.Entities.Match", b =>
@@ -127,9 +210,9 @@ namespace LeagueTableApp.DAL.Migrations
                         .WithMany()
                         .HasForeignKey("HomeTeamId");
 
-                    b.HasOne("LeagueTableApp.DAL.Entities.League", "MatchsLeague")
+                    b.HasOne("LeagueTableApp.DAL.Entities.League", "League")
                         .WithMany("Matches")
-                        .HasForeignKey("MatchsLeagueId")
+                        .HasForeignKey("LeagueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -137,7 +220,7 @@ namespace LeagueTableApp.DAL.Migrations
 
                     b.Navigation("HomeTeam");
 
-                    b.Navigation("MatchsLeague");
+                    b.Navigation("League");
                 });
 
             modelBuilder.Entity("LeagueTableApp.DAL.Entities.Team", b =>

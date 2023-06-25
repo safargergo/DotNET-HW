@@ -18,5 +18,6 @@ namespace LeagueTableApp.DAL.Entities
 
         public ICollection<Team> Teams { get; } = new List<Team>();
         public ICollection<Match> Matches { get; } = new List<Match>();
+        public bool IsDeleted { get; set; } = false;
     }
 }

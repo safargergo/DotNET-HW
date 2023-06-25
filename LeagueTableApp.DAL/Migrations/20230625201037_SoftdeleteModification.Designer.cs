@@ -4,6 +4,7 @@ using LeagueTableApp.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LeagueTableApp.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230625201037_SoftdeleteModification")]
+    partial class SoftdeleteModification
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -253,16 +255,6 @@ namespace LeagueTableApp.DAL.Migrations
                             LeagueId = 102,
                             Name = "TestTeamForDelete",
                             Players = "jatekos1, jatekos2, jatekos3"
-                        },
-                        new
-                        {
-                            Id = 105,
-                            Captain = "Aladár",
-                            Coach = "Csercsaszov",
-                            IsDeleted = false,
-                            LeagueId = 102,
-                            Name = "TestTeamForUpdate",
-                            Players = "Aladár, Béla, Csanád, Dániel"
                         });
                 });
 

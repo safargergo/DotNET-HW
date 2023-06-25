@@ -23,5 +23,6 @@ namespace LeagueTableApp.DAL.Entities
             Coach = coach;
             Captain = captain;
         }
+        public bool IsDeleted { get; set; } = false;
     }
 }
