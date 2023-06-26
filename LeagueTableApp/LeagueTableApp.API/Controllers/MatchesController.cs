@@ -3,6 +3,8 @@ using LeagueTableApp.BLL.Interfaces;
 using LeagueTableApp.BLL.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using LeagueTableApp.BLL.Services;
+using System.Data;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -79,12 +81,26 @@ namespace LeagueTableApp.API.Controllers
         /// <param name="id">The ID of the match.</param>
         /// <param name="match">The updated match.</param>
         /// <returns>No content.</returns>
+        /// <returns>Data has been modified by someone else.</returns>
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public ActionResult Put(int id, [FromBody] Match match)
         {
-            _matchService.UpdateMatch(id, match);
-            return NoContent();
+            try
+            {
+                _matchService.UpdateMatch(id, match);
+                return NoContent();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                ProblemDetails details = new ProblemDetails
+                {
+                    Title = "Data has been modified by someone else.",
+                    Status = StatusCodes.Status409Conflict,
+                };
+                return Conflict(details);
+            }
         }
 
         // DELETE api/<MatchesController>/5
