@@ -32,7 +32,7 @@ namespace LeagueTableApp.BLL.DTOs
         public bool IsEnded { get; set; }
 
         [Required(ErrorMessage = "RowVersion is required")]
-        public byte[] RowVersion { get; init; } = null!;
+        public byte[] RowVersion { get; set; } = null!;
     }
     public record League
     {

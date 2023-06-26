@@ -20,14 +20,26 @@ namespace LeagueTableApp.API.Controllers
         }
 
         // GET: api/<MatchesController>
+        /// <summary>
+        /// Retrieves all matches.
+        /// </summary>
+        /// <returns>The list of matches.</returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<Match>> Get()
         {
             return _matchService.GetMatches().ToList();
         }
 
         // GET api/<MatchesController>/5
+        /// <summary>
+        /// Retrieves a match by ID.
+        /// </summary>
+        /// <param name="id">The ID of the match.</param>
+        /// <returns>The match.</returns>
         [HttpGet("{id}", Name = "GetMatch")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Match> Get(int id)
         {
             try
@@ -47,7 +59,13 @@ namespace LeagueTableApp.API.Controllers
         }
 
         // POST api/<MatchesController>
+        /// <summary>
+        /// Creates a new match.
+        /// </summary>
+        /// <param name="match">The match to create.</param>
+        /// <returns>The created match.</returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public ActionResult<Match> Post([FromBody] Match match)
         {
             var created = _matchService.InsertMatch(match);
@@ -55,7 +73,14 @@ namespace LeagueTableApp.API.Controllers
         }
 
         // PUT api/<MatchesController>/5
+        /// <summary>
+        /// Updates a match by ID.
+        /// </summary>
+        /// <param name="id">The ID of the match.</param>
+        /// <param name="match">The updated match.</param>
+        /// <returns>No content.</returns>
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public ActionResult Put(int id, [FromBody] Match match)
         {
             _matchService.UpdateMatch(id, match);
@@ -63,20 +88,39 @@ namespace LeagueTableApp.API.Controllers
         }
 
         // DELETE api/<MatchesController>/5
+        /// <summary>
+        /// Deletes a match by ID.
+        /// </summary>
+        /// <param name="id">The ID of the match.</param>
+        /// <returns>No content.</returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public ActionResult Delete(int id)
         {
             _matchService.DeleteMatch(id);
             return NoContent();
         }
 
+        /// <summary>
+        /// Retrieves matches of a specific league.
+        /// </summary>
+        /// <param name="id">The ID of the league.</param>
+        /// <returns>The list of matches.</returns>
         [HttpGet("MatchesOfLeague/{id}", Name = "GetMatchesOfLeague")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<Match>> GetMatchesOfLeague(int id)
         {
             return _matchService.GetMatchesOfLeague(id).ToList();
         }
 
+        /// <summary>
+        /// Generates matches for a specific league.
+        /// </summary>
+        /// <param name="id">The ID of the league.</param>
+        /// <returns>The list of generated matches.</returns>
         [HttpGet("GenerateMatchesOfLeague/{id}", Name = "GenerateMatchesOfLeague")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<IEnumerable<Match>> GenerateMatchesOfLeague(int id)
         {
             try

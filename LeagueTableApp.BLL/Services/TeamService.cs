@@ -61,6 +61,11 @@ public class TeamService : ITeamService
 
     public Team InsertTeam(Team newTeam)
     {
+        var nameIsUsed = _context.Teams.Where(t => t.Name == newTeam.Name && t.LeagueId == newTeam.LeagueId).ToList().Count() > 0;
+        if (nameIsUsed)
+        {
+            throw new AlreadyUsedNameAtInsertException("A megadott név foglalt!");
+        }
         var teamFromEf = _mapper.Map<DAL.Entities.Team>(newTeam);
         _context.Teams.Add(teamFromEf);
         _context.SaveChanges();

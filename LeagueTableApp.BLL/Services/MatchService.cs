@@ -62,6 +62,7 @@ public class MatchService : IMatchService
 
     public Match InsertMatch(Match newMatch)
     {
+        //newMatch.RowVersion = BitConverter.GetBytes(0x0000000000000000);//(0x0000000000002711);
         var matchFromEf = _mapper.Map<DAL.Entities.Match>(newMatch);
         _context.Matches.Add(matchFromEf);
         _context.SaveChanges();
